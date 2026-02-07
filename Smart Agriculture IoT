@@ -1,0 +1,59 @@
+#define BLYNK_TEMPLATE_ID "TMPL3BNNzz-XS"
+#define BLYNK_TEMPLATE_NAME "Smart Agriculture IoT System "
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <DHT.h>
+
+char auth[] = "hule0hh4YRMqvurv9cKC5zNmKS9PKdi2";
+
+char ssid[] = "VITC-EVENT";
+char pass[] = "Eve@07&08#$";
+
+#define DHTPIN D3
+#define DHTTYPE DHT11
+#define LIGHT_PIN D0
+#define RAIN_PIN A0
+#define RAIN_LED V12
+#define threshold 600
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  Blynk.begin(auth, ssid, pass);
+}
+
+void loop() {
+  float temp = dht.readTemperature();
+  float hum = dht.readHumidity();
+
+  if (!isnan(temp) && !isnan(hum)) {
+    Blynk.virtualWrite(V5, temp);  
+    Blynk.virtualWrite(V6, hum);   
+    Blynk.virtualWrite(V7, 0);
+  }
+  else{
+    Blynk.virtualWrite(V7, 1);
+  }
+  
+  int lightvalue=digitalRead(LIGHT_PIN);
+  if (lightvalue == 0) {
+    Blynk.virtualWrite(V9, 1);  
+  } 
+  else {
+    Blynk.virtualWrite(V9, 0);  
+  }
+
+  int rainstatus = analogRead(RAIN_PIN);
+  Blynk.virtualWrite(V12, 1023-rainstatus); 
+  if (rainstatus < threshold) {
+    Blynk.virtualWrite(V11, 1); 
+} else {
+    Blynk.virtualWrite(V11, 0); 
+}
+
+
+  Blynk.run();  
+  delay(2000);
+}

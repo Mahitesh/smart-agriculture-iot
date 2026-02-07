@@ -28,6 +28,10 @@ void loop() {
   if (!isnan(temp) && !isnan(hum)) {
     Blynk.virtualWrite(V5, temp);  
     Blynk.virtualWrite(V6, hum);   
+    Blynk.virtualWrite(V7, 0);
+  }
+  else{
+    Blynk.virtualWrite(V7, 1);
   }
 
   Blynk.run();  

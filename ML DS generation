@@ -1,0 +1,36 @@
+import pandas as pd
+import numpy as np
+import os
+
+np.random.seed(42)
+n_samples = 1000
+
+data = pd.DataFrame({
+    'Soil_Moisture': np.random.randint(10, 71, n_samples),
+    'Temperature': np.random.randint(15, 45, n_samples),
+    'Humidity': np.random.randint(20, 91, n_samples),
+    'Rainfall_Last24h': np.random.randint(0, 21, n_samples),
+    'Soil_Type': np.random.choice(['Sandy', 'Loam', 'Clay'], n_samples),
+    'Crop_Type': np.random.choice(['Wheat', 'Rice', 'Corn', 'Tomato'], n_samples)
+})
+
+data['Irrigate'] = np.where(
+    (data['Soil_Moisture'] < 30) & (data['Rainfall_Last24h'] < 5), 1, 0
+)
+data.loc[
+    (data['Crop_Type'] == 'Rice') & (data['Soil_Moisture'] < 50) & (data['Rainfall_Last24h'] < 10),
+    'Irrigate'
+] = 1
+
+data['Soil_Deficit'] = 100 - data['Soil_Moisture']
+data['Heat_Index'] = data['Temperature'] * (1 - data['Humidity']/100)
+
+# Create folder if it doesn't exist
+folder = r'C:\ml_data'
+if not os.path.exists(folder):
+    os.makedirs(folder)
+
+file_path = os.path.join(folder, 'irrigation_synthetic_1000.csv')
+data.to_csv(file_path, index=False)
+
+print(f"Dataset generated and saved at: {file_path}")

@@ -1,2 +1,2 @@
 # smart-agriculture-iot
-Smart Agriculture IoT System – ESP8266 based hackathon project
+Solo hackathon project using ESP8266 and sensors for smart agriculture monitoring.

@@ -18,3 +18,20 @@ print("X_train:", X_train.shape)
 print("X_test:", X_test.shape)
 print("y_train:", y_train.shape)
 print("y_test:", y_test.shape)
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+model = DecisionTreeClassifier(random_state=42)
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+print(f"Model trained!")
+print(f"Accuracy on test set: {accuracy*100:.2f}%")
+print("Confusion Matrix:")
+print(conf_matrix)

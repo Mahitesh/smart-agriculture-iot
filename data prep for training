@@ -35,3 +35,22 @@ print(f"Model trained!")
 print(f"Accuracy on test set: {accuracy*100:.2f}%")
 print("Confusion Matrix:")
 print(conf_matrix)
+
+new_file_path = r'C:\ml_data\Judge_synthetic_data_set.csv'
+new_data = pd.read_csv(new_file_path)
+
+new_data_encoded = pd.get_dummies(new_data, columns=['Soil_Type', 'Crop_Type'], drop_first=True)
+
+new_data_encoded = new_data_encoded.reindex(columns=X_train.columns, fill_value=0)
+
+predictions = model.predict(new_data_encoded)
+
+new_data['Irrigate_Predicted'] = predictions
+
+print(new_data.head())
+
+new_data['Soil_Deficit'] = 100 - new_data['Soil_Moisture']
+new_data['Heat_Index'] = new_data['Temperature'] * (1 - new_data['Humidity']/100)
+
+new_data.to_csv(r'C:\ml_data\judge_dataset_predictions.csv', index=False)
+print("Predictions saved to C:\\ml_data\\judge_dataset_predictions.csv")
